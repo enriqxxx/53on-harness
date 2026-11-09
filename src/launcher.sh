@@ -13,6 +13,7 @@ if [ -n "${__RUN_HAS_IN:-}" ]; then
 fi
 printf 'POST /run?id=%s&t=%s HTTP/1.1\r\nHost: 127.0.0.1:%s\r\nContent-Length: %d\r\n\r\n' "$id" "$T" "$P" "$n" >&3
 printf '%s\0' "${a[@]}" >&3
+IFS= read -r l <&3; case "$l" in *" 200 "*) ;; *) echo "53ON refused this command: restart 53ON and repeat" >&2; exit 1;; esac
 while IFS= read -r l <&3; do [ "$l" = $'\r' ] && break; done
 cat <&3; exec 3>&-
 [ -n "$b" ] && kill "$b" 2>/dev/null

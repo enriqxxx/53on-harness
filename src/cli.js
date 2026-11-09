@@ -54,7 +54,7 @@ function onPath(d) {
     (e) => { if (!e) try { fs.writeFileSync(mark, d); } catch (_) {} });
 }
 
-function sync() {
+function sync(tries) {
   const d = dir();
   try {
     fs.mkdirSync(d, { recursive: true });
@@ -62,12 +62,16 @@ function sync() {
     let had = [];
     try { had = JSON.parse(fs.readFileSync(path.join(d, OWN), 'utf8')); } catch (_) {}
     for (const n of had) if (!(n in w.out)) try { fs.unlinkSync(path.join(d, n)); } catch (_) {}   // nobody gives it any more
+    let busy = false;
     for (const [n, t] of Object.entries(w.out)) {
       const f = path.join(d, n);
       let old = null;
       try { old = fs.readFileSync(f, 'utf8'); } catch (_) {}
-      if (old !== t) { fs.writeFileSync(f + '.tmp', t); fs.renameSync(f + '.tmp', f); }
+      if (old === t) continue;
+      try { fs.writeFileSync(f + '.tmp', t); fs.renameSync(f + '.tmp', f); }
+      catch (_) { busy = true; try { fs.unlinkSync(f + '.tmp'); } catch (_) {} }   // Windows replaces no file while something holds it open
     }
+    if (busy) { if ((tries || 0) < 120) setTimeout(() => sync((tries || 0) + 1), 500).unref(); return { ok: false, error: 'bin_busy', dir: d }; }
     fs.writeFileSync(path.join(d, OWN), JSON.stringify(Object.keys(w.out)));
     onPath(d);
     return { ok: true, dir: d, commands: w.cmds };

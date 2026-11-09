@@ -1,8 +1,18 @@
 const crypto = require('crypto'), fs = require('fs'), os = require('os'), path = require('path');
-const SHIM = path.join(__dirname, 'run-shim.js'), MAX = 8 << 20, TOKEN = crypto.randomBytes(16).toString('hex'), ends = new Map();
+const SHIM = path.join(__dirname, 'run-shim.js'), MAX = 8 << 20, ends = new Map();
+function key() {
+  const make = () => crypto.randomBytes(16).toString('hex');
+  let f;
+  try { f = path.join(require('electron').app.getPath('userData'), 'door.key'); } catch (_) { return make(); }
+  try { const k = fs.readFileSync(f, 'utf8').trim(); if (/^[0-9a-f]{32}$/.test(k)) return k; } catch (_) {}
+  const k = make();
+  try { fs.writeFileSync(f, k); } catch (_) {}
+  return k;
+}
+const TOKEN = key();
 const inFile = (id) => path.join(os.tmpdir(), '53on_run_' + String(id).replace(/[^\w-]/g, '') + '.in');
 
-function allowed(q, u) {   // a page always sends Origin; a foreign Host is DNS rebinding; another user of this PC has no token
+function allowed(q, u) {   // a page always sends Origin; a foreign Host is DNS rebinding; another user of this PC has no key
   if (q.headers.origin != null || !/^(127\.0\.0\.1|localhost)(:\d+)?$/i.test(q.headers.host || '')) return false;
   const a = Buffer.from(String(u.searchParams.get('t') || '')), b = Buffer.from(TOKEN);
   return a.length === b.length && crypto.timingSafeEqual(a, b);

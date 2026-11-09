@@ -101,10 +101,12 @@ function wear(w, vs, own) {
   (vs || []).forEach(function (v) { views.add(v); tint(v); v.webContents.on('destroyed', function () { views.delete(v); }); });
   (own || []).forEach(function (wc) { pages.add(wc); wc.on('dom-ready', function () { mark(wc); }); wc.on('destroyed', function () { pages.delete(wc); }); });
 }
+let settle = null;
+const save = () => { clearTimeout(settle); settle = null; try { require('./packs').writeJson(SPOTS(), spots); } catch (_) {} };
 function keep(key, w) {
-  const note = function () { if (!w.isDestroyed()) spots[key] = Object.assign(w.getNormalBounds(), w.isMaximized() ? { max: 1 } : {}); };
+  const note = function () { if (w.isDestroyed()) return; spots[key] = Object.assign(w.getNormalBounds(), w.isMaximized() ? { max: 1 } : {}); clearTimeout(settle); settle = setTimeout(save, 400).unref(); };
   ['resize', 'move', 'maximize', 'unmaximize'].forEach(function (ev) { w.on(ev, note); });
-  w.on('close', function () { note(); try { require('./packs').writeJson(SPOTS(), spots); } catch (_) {} });
+  w.on('close', function () { note(); save(); });
 }
 function apartView(key, vp, size, b) {
   const o = extras.get(key);
