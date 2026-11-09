@@ -49,12 +49,13 @@ function peer(sock, head) {
   };
 }
 
-function listen(port, onPeer) {
+function listen(port, onPeer, extra) {
   return new Promise((resolve) => {
     const peers = new Set();
-    const srv = http.createServer((q, r) => { r.writeHead(426); r.end(); });
+    const srv = http.createServer((q, r) => { if (extra && extra.http(q, r)) return; r.writeHead(426); r.end(); });
     srv.on('upgrade', (q, sock, head) => {
       sock.on('error', () => {});
+      if (extra && extra.upgrade(q, sock, head)) return;
       const key = String(q.headers['sec-websocket-key'] || '');
       if (q.headers.origin != null || !/^(127\.0\.0\.1|localhost)(:\d+)?$/i.test(q.headers.host || '') || !/^[A-Za-z0-9+/]{22}==$/.test(key)) {
         try { sock.end('HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n'); } catch (_) {}

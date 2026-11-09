@@ -4,6 +4,12 @@ The open desktop shell of [53ON](https://53on.com): an Electron app that gives y
 
 This repository is the shell, and only the shell. What fills it stays private and is not here: the PC commands, the Harness Cable and the other complements are downloaded separately, each one signed (ed25519) and verified before it is installed. The memory engine and the store run as a service on 53on.com.
 
+## What it does
+
+- Shows your 53ON account in its own window, with a panel to audit what the AI asks of your PC.
+- Gives the AI of your account a terminal, your files, screenshots, the camera, voice and its own browser, each under the permission mode you choose.
+- Installs per user, without administrator rights, and updates itself. Windows Settings > Apps removes it.
+
 ## Permission modes
 
 One button decides how much the AI may do, and nothing else can change it: neither the model nor a page.
@@ -15,14 +21,35 @@ One button decides how much the AI may do, and nothing else can change it: neith
 | `auto` | Runs what the guard considers safe and pauses on anything dangerous. |
 | `bypass` | Never asks. Only the owner can choose it, by hand. |
 
-## Run from source
+## Download
+
+Windows 10 and 11, 64-bit. The installer is built by this repository's [GitHub Actions](.github/workflows/build.yml) and offered in the store of [53on.com](https://53on.com). Installed builds update themselves from a signed catalog row: an update whose signature or hash does not match is refused.
+
+## Build from source
+
+Requires Node.js and Windows.
 
 ```
-npm install
-npm start
+npm ci
+npm start          # run it
+npm run dist       # dist/53on-setup.exe
 ```
 
-Requires Node.js. Developed and tested on Windows. Installed builds update themselves from a signed catalog row: an update whose signature or hash does not match is refused.
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org)
+
+Team roles:
+
+- Authors: [enriqxxx](https://github.com/enriqxxx)
+- Reviewers: [enriqxxx](https://github.com/enriqxxx)
+- Approvers: [enriqxxx](https://github.com/enriqxxx)
+
+Only binaries built by this repository's workflow are submitted for signing, and each release is approved by hand.
+
+## Privacy
+
+Read the [privacy policy](installer/privacy.en.txt), which the installer also shows. The program has no analytics or telemetry of its own. Your account on 53on.com follows the [53ON Privacy Notice](https://53on.com/privacy).
 
 ## Security
 

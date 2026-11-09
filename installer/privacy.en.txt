@@ -1,0 +1,26 @@
+53ON Harness - Privacy
+
+53ON Harness is the desktop client of your 53ON account. The program itself has no analytics and no telemetry.
+
+WHAT LEAVES THIS PC, AND WHERE
+
+53on.com (your account)
+The window shows 53on.com. What you do there (your login, your chats, the files you send) goes to 53ON, as in any browser. The 53ON Privacy Notice applies: https://53on.com/privacy
+
+Updates and add-ons (53on.com and vcorpsllc.com)
+The program checks for new signed versions and downloads them. Those requests carry no account data.
+
+The AI you use
+What you ask the AI, and what it reads on this PC with your permission, goes to the AI service chosen in your account. A model running on your own PC sends nothing out.
+
+Voice (only if you choose it)
+With an online voice (Edge or Azure), the text to be read aloud goes to Microsoft's speech services. The native voice stays on this PC. You choose it on the voice card in your account.
+
+Messages (off by default)
+If you turn on Messages in Options, the program registers with Google's push service (Firebase Cloud Messaging) so that new messages reach this PC. Turn them off again in Options > Messages.
+
+WHAT STAYS ON THIS PC
+
+Your settings, the files in the program's data folder, and the record of what the AI asks of your PC, which you can review in the Terminal panel.
+
+You can remove the program at any time from Windows Settings > Apps. The uninstaller asks whether to delete your data too.

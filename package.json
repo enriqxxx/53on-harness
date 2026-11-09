@@ -1,18 +1,70 @@
 {
   "name": "53on-harness",
-  "version": "1.0.87",
+  "version": "1.0.92",
   "description": "53ON Harness: 53ON on your PC. Hands, eyes and voice for your AI; the owner is the only guardian.",
   "author": "VCORPS LLC",
   "license": "MIT",
   "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder && node scripts/setup.js"
+  },
   "dependencies": {
     "@eneris/push-receiver": "4.4.0",
     "@vscode/ripgrep": "^1.18.0"
   },
   "devDependencies": {
-    "electron": "^42.11.8"
+    "electron": "^42.11.8",
+    "electron-builder": "^26.15.3"
   },
-  "scripts": {
-    "start": "electron ."
+  "build": {
+    "appId": "com.vcorps.fivethreeon",
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableCookieEncryption": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "grantFileProtocolExtraPrivileges": true
+    },
+    "productName": "53ON",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**",
+      "renderer/**",
+      "lang/**",
+      "THIRD_PARTY_NOTICES.txt",
+      "package.json",
+      "LICENSE"
+    ],
+    "asarUnpack": [
+      "**/@vscode/ripgrep-*/bin/*"
+    ],
+    "win": {
+      "target": [
+        "dir"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.developer-tools"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Development"
+    },
+    "electronLanguages": [
+      "en-US",
+      "es-419"
+    ],
+    "executableName": "53on"
   }
 }

@@ -46,7 +46,7 @@ function held(port) {
 }
 const nap = (ms) => new Promise((r) => setTimeout(r, ms));
 function env(id, home, port) {
-  const data = path.join(home, 'data'), e = Object.assign({}, process.env, { ELECTRON_RUN_AS_NODE: '1', COMPLEMENT_ID: id, COMPLEMENT_HOME: home, COMPLEMENT_DATA: data });
+  const data = path.join(home, 'data'), e = Object.assign({}, process.env, { COMPLEMENT_ID: id, COMPLEMENT_HOME: home, COMPLEMENT_DATA: data });
   try { fs.mkdirSync(data, { recursive: true }); } catch (_) {}
   for (const k in e) if (/^port$/i.test(k)) delete e[k];   // a PORT the Arnés itself inherited is no complement's
   if (port) e.PORT = String(port);
@@ -58,10 +58,11 @@ function launch(id) {
   if (once) e.COMPLEMENT_REASON = c0.reason || 'start';
   if (c0.page) e.COMPLEMENT_PAGE = c0.page;
   if (c0.plugs) e.COMPLEMENT_PLUGS = c0.plugs;   // the mains of the complements plugged into this one
-  const c = spawn(process.execPath, (line ? ['--max-old-space-size=2048', '--expose-gc'] : []).concat([c0.entry]), {
+  const flags = line ? ['--max-old-space-size=2048', '--expose-gc'] : [], proc = require('./proc'), inside = proc.available();
+  const c = inside ? proc.fork(c0.entry, [], { cwd: c0.dir, env: e, execArgv: flags, line: line, piped: line || once, out: out }) : spawn(process.execPath, flags.concat([c0.entry]), {
     cwd: c0.dir, env: e, stdio: [line ? 'pipe' : 'ignore', line || once ? 'pipe' : out, out], windowsHide: true });
   k.child = c; k.since = Date.now(); k.ready = false; k.busy = 0; k.note = '';   // a new process says its own notes
-  if (typeof out === 'number') { try { fs.closeSync(out); } catch (_) {} }   // the child owns it now
+  if (!inside && typeof out === 'number') { try { fs.closeSync(out); } catch (_) {} }   // the child owns it now (proc.fork closes its own)
   c.on('error', (e) => { log(id, 'launch failed: ' + e.message); if (k.child === c) k.child = null; });
   if (line || once) {
     let buf = '';

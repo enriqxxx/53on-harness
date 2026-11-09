@@ -127,7 +127,7 @@ function open(port) {
     if (gate) { gate.close(); gate = null; peers.clear(); }
     gatePort = port; gateErr = '';
     if (!port) return info();
-    const r = await require('./wsd').listen(port, serve);
+    const r = await require('./wsd').listen(port, serve, require('./run'));
     if (r.ok) gate = r; else gateErr = r.error;   // a held port is theirs: said, retried on the next open
     if (r.ok && !wired) {
       wired = true;

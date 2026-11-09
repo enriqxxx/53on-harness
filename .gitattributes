@@ -1,0 +1,2 @@
+# byte for byte what the house gate passed: a CRLF in launcher.sh would break every command of the build
+* -text

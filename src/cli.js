@@ -23,7 +23,7 @@ function gitBash() {
 }
 function wanted() {
   const packs = require('./packs'), out = {}, gb = gitBash(), cmds = ['53on'];
-  out['.node'] = '#!/usr/bin/env bash\nE=' + q(unix(process.execPath)) + '\n[ -f "$E" ] || { echo "⛔ 53ON is closed: open 53ON and repeat" >&2; exit 1; }\nELECTRON_RUN_AS_NODE=1 exec "$E" "$@"\n';
+  out['.node'] = require('./run').launcher(7532);   // 53ON runs them: no Node on the PC, none in the launcher
   out['.53on.js'] = DOOR;
   out['53on'] = '#!/usr/bin/env bash\nexec ' + here + '/.node ' + here + '/.53on.js "$@"\n';
   for (const id of packs.installed()) {

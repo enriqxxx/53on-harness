@@ -102,8 +102,9 @@ function child(sp, args, pre) {
   return new Promise((resolve) => {
     const bodyd = require('./bodyd'), o = bodyd.sink(sp.id);
     let p;
-    try { p = spawn(process.execPath, [pre || sp.main].concat(args), { cwd: sp.dir, env: Object.assign(bodyd.env(sp.id, home(sp.id), sp.port), pre ? { COMPLEMENT_REASON: 'remove' } : {}), windowsHide: true, stdio: ['ignore', pre ? o : 'ignore', o] }); }
-    finally { if (typeof o === 'number') try { fs.closeSync(o); } catch (_) {} }   // the child holds its own
+    const proc = require('./proc'), inside = proc.available();
+    try { p = inside ? proc.fork(pre || sp.main, args, { cwd: sp.dir, env: Object.assign(bodyd.env(sp.id, home(sp.id), sp.port), pre ? { COMPLEMENT_REASON: 'remove' } : {}), out: o }) : spawn(process.execPath, [pre || sp.main].concat(args), { cwd: sp.dir, env: Object.assign(bodyd.env(sp.id, home(sp.id), sp.port), pre ? { COMPLEMENT_REASON: 'remove' } : {}), windowsHide: true, stdio: ['ignore', pre ? o : 'ignore', o] }); }
+    finally { if (!inside && typeof o === 'number') try { fs.closeSync(o); } catch (_) {} }   // the child holds its own (proc.fork closes its own)
     const t = setTimeout(() => { try { p.kill(); } catch (_) {} }, pre ? T.prerm : T.probe);
     const end = (c) => { clearTimeout(t); bodyd.log(sp.id, (pre ? 'prerm' : args[0]) + ' exit=' + c); resolve(c); };
     p.once('error', () => end(-1));
