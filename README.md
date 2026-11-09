@@ -4,11 +4,24 @@ The open desktop shell of [53ON](https://53on.com): an Electron app that gives y
 
 This repository is the shell, and only the shell. What fills it stays private and is not here: the PC commands, the Harness Cable and the other complements are downloaded separately, each one signed (ed25519) and verified before it is installed. The memory engine and the store run as a service on 53on.com.
 
-## What it does
+## Two ways to use it
 
-- Shows your 53ON account in its own window, with a panel to audit what the AI asks of your PC.
-- Gives the AI of your account a terminal, your files, screenshots, the camera, voice and its own browser, each under the permission mode you choose.
-- Installs per user, without administrator rights, and updates itself. Windows Settings > Apps removes it.
+It is one AI with one memory, whether it works inside 53ON or outside it.
+
+- **On its own, with an API.** The AI runs in 53ON's own chat. Bring your key from Anthropic, OpenAI, Google, DeepSeek, Groq, Moonshot, Alibaba or OpenRouter, or use a model that runs on your own PC.
+- **Together with Claude Code in VS Code or the terminal.** The Harness Cable installs itself and connects Claude Code with nothing to set up: a memory comes with each message, and the AI wakes up with its memory when a session starts or comes back from an automatic compact. Any other AI with a terminal can use the same commands.
+
+## What your AI gets
+
+- A memory that stays between sessions, on your PC, and can hold photos, audio and video.
+- A terminal and your files, each under the permission mode you choose.
+- Eyes and voice: the page, the screen, the camera, the microphone and a voice of its own.
+- Its own browser, which it sees and touches like a person.
+- Messages from your phone, if you turn them on: to 53ON's chat or to your Claude Code chat.
+- Scheduled prompts and work in the background.
+- A panel to audit everything the AI asks of your PC.
+
+It installs per user, without administrator rights, and updates itself. Windows Settings > Apps removes it.
 
 ## Permission modes
 
