@@ -1,0 +1,59 @@
+:root {
+  --bg: #0f1420;
+  --fg: #c7d2e0;
+  --fg-dim: #7f8ba3;
+  --hover: #1c2434;
+  --line: #232c40;
+  --panel: #161d2b;
+  --press: #131a28;
+}
+/* light, when 53ON is (its bridge tells the Arnés, which marks this bar) */
+:root[data-theme=light] { --bg: #f0f2f5; --fg: #111b21; --fg-dim: #667781; --hover: #e2e6ea; --line: #d9dee3; --panel: #ffffff; --press: #d5dbe1; }
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden; user-select: none; cursor: default;
+}
+
+.titlebar {
+  display: flex; align-items: center; height: 40px; gap: 2px;
+  -webkit-app-region: drag; app-region: drag;
+  padding-left: env(titlebar-area-x, 0);
+  /* reserva a la DERECHA para min/max/close nativos (WCO ~140px; fallback fijo si env viene vacio) */
+  padding-right: calc(100vw - env(titlebar-area-width, calc(100vw - 140px)) - env(titlebar-area-x, 0px));
+}
+.titlebar.inactive { opacity: .60; }   /* dim cuando la ventana pierde foco (como VS Code) */
+
+.grp { display: flex; align-items: center; gap: 2px; -webkit-app-region: no-drag; app-region: no-drag; }
+.grp.right { gap: 8px; }
+
+.btn {
+  -webkit-app-region: no-drag; app-region: no-drag;
+  height: 28px; min-width: 32px; padding: 0 8px; border: 0; background: transparent; color: var(--fg);
+  border-radius: 6px; font-size: 12px; line-height: 1; cursor: default;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+}
+.btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn.ai { font-weight: 700; letter-spacing: .5px; }
+.logo { width: 34px; height: 18px; padding: 0 8px; flex: none; }   /* app icon cell, as VS Code's */
+.btn:hover { background: var(--hover); }
+.btn:active { background: var(--press); }
+.btn:disabled { color: var(--fg-dim); opacity: .45; background: transparent; }
+.btn.update { background: #0e639c; color: #fff; font-weight: 600; padding: 0 10px; border-radius: 4px; }
+.btn.update:hover { background: #1177bb; }
+
+.spacer { flex: 1 1 auto; height: 100%; }   /* franja de arrastre real */
+
+.pill {
+  -webkit-app-region: no-drag; app-region: no-drag;
+  max-width: 360px; height: 26px; padding: 0 12px;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 13px;
+  color: var(--fg-dim); font-size: 12px; white-space: nowrap; overflow: hidden;
+}
+.pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #39d98a; flex: none; }
+.pill.off .dot { background: #e5533c; }
+.pill-text { overflow: hidden; text-overflow: ellipsis; }
+
+.status { display: flex; align-items: center; gap: 8px; color: var(--fg-dim); font-size: 12px; }

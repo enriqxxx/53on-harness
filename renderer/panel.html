@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-src http://127.0.0.1:*;">
+<title>Panel</title>
+<style>
+/* VS Code's Modern themes: the panel, its tabs as pills, its icons, the status bar */
+:root { --bg: #181818; --fg: #cccccc; --dim: #9d9d9d; --line: #2b2b2b; --pill: #2b2b2b; --hov: #2a2d2e; --in: #313131; --hi: #0078d4; --bad: #f85149; --warn: #cca700; }
+:root[data-theme=light] { --bg: #f8f8f8; --fg: #3b3b3b; --dim: #6f6f6f; --line: #e5e5e5; --pill: #e4e4e4; --hov: #ececec; --in: #ffffff; --hi: #005fb8; --bad: #e51400; --warn: #bf8803; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, 'Segoe UI', sans-serif; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+#pan { flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; border-top: 1px solid var(--line); }
+html.closed #pan { display: none; }
+#div { position: absolute; top: -3px; left: 0; right: 0; height: 6px; cursor: ns-resize; z-index: 3; display: flex; justify-content: center; align-items: center; color: var(--dim); font-size: 14px; line-height: 0; }
+#div:hover { background: var(--hi); color: transparent; }
+header { display: flex; align-items: center; height: 35px; padding: 0 8px 0 10px; flex: none; }
+#tabs { display: flex; gap: 4px; flex: 1; overflow: hidden; }
+#tabs button { background: none; border: 0; border-radius: 4px; color: var(--dim); font: inherit; font-size: 12px; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
+#tabs button:hover { color: var(--fg); }
+#tabs button.on { color: var(--fg); background: var(--pill); }
+#tabs button:disabled { opacity: .45; cursor: default; }
+#tabs .n { margin-left: 6px; padding: 0 5px; border-radius: 9px; background: var(--hi); color: #fff; font-size: 11px; }
+#acts { display: flex; align-items: center; gap: 2px; }
+.ic { width: 24px; height: 22px; display: inline-flex; align-items: center; justify-content: center; background: none; border: 0; border-radius: 4px; color: var(--fg); cursor: pointer; padding: 0; }
+.ic:hover { background: var(--hov); }
+.ic svg, footer svg { width: 16px; height: 16px; fill: currentColor; }
+.sep { width: 1px; height: 16px; background: var(--line); margin: 0 4px; }
+#filt { display: none; position: relative; margin: 2px 12px 6px 18px; flex: none; }
+#filt input { width: 100%; box-sizing: border-box; background: var(--in); color: var(--fg); border: 1px solid var(--line); border-radius: 2px; padding: 3px 28px 3px 6px; font: inherit; font-size: 12px; outline: none; }
+#filt input:focus { border-color: var(--hi); }
+#filt svg { position: absolute; right: 6px; top: 4px; width: 16px; height: 16px; fill: var(--dim); }
+main { flex: 1; overflow: auto; padding: 0 12px 8px 18px; font: 12px/1.5 Consolas, 'Cascadia Mono', monospace; min-height: 0; }
+main.frame { padding: 0; overflow: hidden; }
+iframe { border: 0; width: 100%; height: 100%; display: block; background: var(--bg); }
+.row { padding: 1px 0; white-space: pre-wrap; word-break: break-word; }
+.row .t { color: var(--dim); margin-right: 8px; }
+.row .v { color: var(--hi); margin-right: 8px; }
+.row .ms { color: var(--dim); margin-left: 6px; }
+.row.bad .v, .row.l3 { color: var(--bad); }
+.row.l2 { color: var(--warn); }
+.row .o { display: none; color: var(--dim); margin: 2px 0 4px 16px; max-height: 240px; overflow: auto; }
+.row.open .o { display: block; }
+.row.tool { cursor: pointer; }
+.empty { color: var(--fg); padding: 4px 0; font-family: system-ui, 'Segoe UI', sans-serif; font-size: 13px; }
+table { border-collapse: collapse; font-family: system-ui, 'Segoe UI', sans-serif; font-size: 13px; }
+td, th { text-align: left; padding: 3px 24px 3px 0; }
+th { color: var(--dim); font-weight: normal; }
+.off { color: var(--dim); }
+footer { height: 22px; flex: none; display: flex; cursor: pointer; align-items: center; padding: 0 6px; border-top: 1px solid var(--line); font-size: 12px; }
+footer button { display: inline-flex; align-items: center; gap: 3px; height: 22px; background: none; border: 0; color: var(--fg); font: inherit; padding: 0 5px; cursor: pointer; }
+footer button:hover { background: var(--hov); }
+#bell { margin-left: auto; }
+#guide { display: none; position: fixed; left: 0; right: 0; height: 2px; background: var(--hi); }
+html.drag, html.drag body { background: transparent; }
+html.drag #pan, html.drag footer { visibility: hidden; }
+html.drag #guide { display: block; }
+</style>
+</head>
+<body>
+<div id="pan">
+  <div id="div">⋯</div>
+  <header><div id="tabs"></div><div id="acts">
+    <button class="ic" id="clear"><svg viewBox="0 0 16 16"><path d="M10 12.6l.7.7 1.6-1.6 1.6 1.6.8-.7L13 11l1.7-1.6-.8-.8-1.6 1.7-1.6-1.7-.7.8 1.6 1.6-1.6 1.6zM1 4h14V3H1v1zm0 3h14V6H1v1zm8 2.5V9H1v1h8v-.5zM9 13v-1H1v1h8z"/></svg></button>
+    <span class="sep"></span>
+    <button class="ic" id="max"><svg viewBox="0 0 16 16"><path id="maxp" d="M3 3v4h1V4h3V3H3zm10 0H9v1h3v3h1V3zM4 9H3v4h4v-1H4V9zm8 3H9v1h4V9h-1v3z"/></svg></button>
+    <button class="ic" id="close"><svg viewBox="0 0 16 16"><path d="M8 8.7l3.6 3.6.7-.7L8.7 8l3.6-3.6-.7-.7L8 7.3 4.4 3.7l-.7.7L7.3 8l-3.6 3.6.7.7L8 8.7z"/></svg></button>
+  </div></header>
+  <div id="filt"><input id="q" spellcheck="false"><svg viewBox="0 0 16 16"><path d="M15 2v1.67l-5 4.759V14H6V8.429l-5-4.76V2h14zM7 8v5h2V8l5-4.76V3H2v.24L7 8z"/></svg></div>
+  <main id="main"></main>
+</div>
+<div id="guide"></div>
+<footer><button id="cnt"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 13A6 6 0 118 2a6 6 0 010 12zm2.65-8.94L8.71 8l1.94 1.94-.71.71L8 8.71l-1.94 1.94-.71-.71L7.29 8 5.35 6.06l.71-.71L8 7.29l1.94-1.94.71.71z"/></svg><span id="ne">0</span><svg viewBox="0 0 16 16"><path d="M7.56 1h.88l6.54 12.26-.44.74H1.44L1 13.26 7.56 1zM8 2.28L2.28 13H13.7L8 2.28zM8.625 12v-1h-1.25v1h1.25zm-1.25-2V6h1.25v4h-1.25z"/></svg><span id="nw">0</span></button><button id="bell"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.5A4.5 4.5 0 0 0 3.5 6v3L2 11v1h12v-1l-1.5-2V6A4.5 4.5 0 0 0 8 1.5zm0 1A3.5 3.5 0 0 1 11.5 6v3.3l1.1 1.7H3.4l1.1-1.7V6A3.5 3.5 0 0 1 8 2.5zM6.5 13a1.5 1.5 0 0 0 3 0h-3z"/><circle id="dot" cx="12.5" cy="3.5" r="2.5" fill="var(--hi)"/></svg></button></footer>
+<script src="panel.js"></script>
+</body>
+</html>

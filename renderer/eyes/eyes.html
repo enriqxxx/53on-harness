@@ -1,0 +1,60 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>eyes</title></head><body>
+<script>
+// La camara del dueño, sin binarios: getUserMedia + un lienzo. El primer cuadro de un sensor
+// sale NEGRO (se esta midiendo la luz), asi que se espera y se descartan cuadros antes de mirar.
+(function () {
+  var reply = function (id, r) { try { window.__eyes.done(id, r); } catch (e) {} };
+  window.__eyes.onGrab(function (job) {
+    var id = job.id;
+    if (job.list) {
+      navigator.mediaDevices.enumerateDevices().then(function (ds) {
+        reply(id, { ok: true, devices: ds.filter(function (d) { return d.kind === 'videoinput'; }).map(function (d) { return { id: d.deviceId, label: d.label }; }) });
+      }).catch(function (e) { reply(id, { ok: false, error: String(e.message || e) }); });
+      return;
+    }
+    // one phrase from the mic (m listen): it ends 1.2 s after speech goes quiet, 8 s with none, 30 s at most (the phone's)
+    if (job.listen) {
+      navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }).then(function (s) {
+        var ctx = new AudioContext(), an = ctx.createAnalyser(), lvl = new Uint8Array(an.fftSize), mr = new MediaRecorder(s), parts = [], t0 = Date.now(), spoke = false, quiet = 0;
+        ctx.createMediaStreamSource(s).connect(an);
+        var end = function () { if (mr.state !== 'inactive') mr.stop(); };
+        var tick = setInterval(function () {
+          an.getByteTimeDomainData(lvl);
+          var m = 0; for (var i = 0; i < lvl.length; i++) m = Math.max(m, Math.abs(lvl[i] - 128));
+          if (m > 12) { spoke = true; quiet = 0; } else if (spoke && (quiet += 100) >= 1200) end();
+          if (Date.now() - t0 > (spoke ? 30000 : 8000)) end();
+        }, 100);
+        mr.ondataavailable = function (e) { if (e.data && e.data.size) parts.push(e.data); };
+        mr.onstop = function () {
+          clearInterval(tick); s.getTracks().forEach(function (t) { t.stop(); }); ctx.close();
+          if (!spoke) return reply(id, { ok: false, error: 'no_speech' });
+          var rd = new FileReader();
+          rd.onloadend = function () { reply(id, { ok: true, data: String(rd.result).split(',')[1] }); };
+          rd.readAsDataURL(new Blob(parts));
+        };
+        mr.start(250);
+      }).catch(function () { reply(id, { ok: false, error: 'mic' }); });
+      return;
+    }
+    var want = { video: job.device ? { deviceId: { exact: job.device } } : true, audio: false };
+    navigator.mediaDevices.getUserMedia(want).then(function (stream) {
+      var v = document.createElement('video');
+      v.autoplay = true; v.muted = true; v.playsInline = true; v.srcObject = stream;
+      var stop = function () { try { stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {} };
+      var shots = 0;
+      var tick = function () {
+        if (!v.videoWidth) return requestAnimationFrame(tick);
+        if (++shots < (job.warm || 12)) return requestAnimationFrame(tick);
+        var w = v.videoWidth, h = v.videoHeight;
+        if (job.max && w > job.max) { h = Math.round(h * job.max / w); w = job.max; }
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(v, 0, 0, w, h);
+        var url = c.toDataURL('image/png');
+        stop(); reply(id, { ok: true, data: url.slice(url.indexOf(',') + 1), w: w, h: h });
+      };
+      v.onloadedmetadata = function () { v.play().then(tick).catch(tick); };
+      setTimeout(function () { stop(); }, 20000);
+    }).catch(function (e) { reply(id, { ok: false, error: String(e.name || '') + ' ' + String(e.message || e) }); });
+  });
+})();
+</script></body></html>

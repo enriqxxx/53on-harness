@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'">
+<title>Options</title>
+<link rel="stylesheet" href="ui.css"></head>
+<body>
+  <h1>⚙️ <span id="h"></span></h1><p class="sub" id="sub"></p>
+  <div class="card"><div class="t" id="tApp"></div>
+    <label class="uid"><span id="lUi"></span><select id="ui"></select></label>
+    <label class="uid"><span id="lZoom"></span><select id="zoom"></select></label>
+    <label class="uid"><span id="lMode"></span><select id="mode"></select></label><div class="d" id="dMode"></div><div class="d" id="dDoor"></div></div>
+  <div class="card"><div class="row"><div><div class="t" id="tAi"></div><div class="d" id="dAi"></div></div><button id="ai"></button></div></div>
+  <div class="card"><div class="row"><div><div class="t" id="tTheme"></div><div class="d" id="dTheme"></div></div><button id="theme"></button></div></div>
+  <div class="card"><div class="row"><div><div class="t" id="tMsg"></div><div class="d" id="dMsg"></div></div>
+    <label class="sw"><input type="checkbox" id="mon"><span></span></label></div>
+    <label class="uid"><span id="lId"></span><input type="text" id="uid" maxlength="12" inputmode="numeric"></label>
+    <label class="uid"><span id="lTo"></span><select id="to"></select></label>
+    <label class="uid"><span id="lTone"></span><select id="tone"></select></label>
+    <label class="uid"><span id="lSay"></span><input type="text" id="say" maxlength="60"></label></div>
+  <div class="card"><div class="row"><div><div class="t" id="tDl"></div><div class="d" id="dl"></div></div><button id="pickDir"></button></div>
+    <div class="row"><div class="d" id="lAsk"></div><label class="sw"><input type="checkbox" id="ask"><span></span></label></div></div>
+  <div class="card"><div class="t" id="tPacks"></div><div id="packs"></div></div>
+  <div id="msg"></div>
+  <script src="options.js"></script>
+</body></html>
