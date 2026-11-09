@@ -23,7 +23,7 @@ One button decides how much the AI may do, and nothing else can change it: neith
 
 ## Download
 
-Windows 10 and 11, 64-bit. The installer is built by this repository's [GitHub Actions](.github/workflows/build.yml) and offered in the store of [53on.com](https://53on.com). Installed builds update themselves from a signed catalog row: an update whose signature or hash does not match is refused.
+Windows 10 and 11, 64-bit. The installer is built by this repository's [GitHub Actions](.github/workflows/build.yml) and published in [Releases](https://github.com/enriqxxx/53on-harness/releases) and in the store of [53on.com](https://53on.com). Installed builds update themselves from a signed catalog row: an update whose signature or hash does not match is refused.
 
 ## Build from source
 
@@ -44,6 +44,8 @@ Team roles:
 - Authors: [enriqxxx](https://github.com/enriqxxx)
 - Reviewers: [enriqxxx](https://github.com/enriqxxx)
 - Approvers: [enriqxxx](https://github.com/enriqxxx)
+
+Status: the application to SignPath Foundation has been submitted and is waiting for approval, so the installers published so far are not signed yet.
 
 Only binaries built by this repository's workflow are submitted for signing, and each release is approved by hand.
 
