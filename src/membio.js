@@ -5,15 +5,15 @@ const crypto = require('crypto');
 const { app } = require('electron');
 const up = require('./update');
 
-const FILES = ['lang/en.js', 'lang/es.js', 'memory.core.js', 'memory.node.js'];   // sorted: the only files an engine has
+const names = (e) => Object.keys(e.f).sort(), NAME = /^(?:(?:lang|words)\/[a-z]{2}|memory\.(?:core|node))\.js$/;
 const json = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (_) { return null; } };
 const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
 function log(m) { try { fs.appendFileSync(path.join(app.getPath('userData'), 'packs.log'), new Date().toISOString() + ' engine ' + m + '\n'); } catch (_) {} }
 
 const shape = (e) => !!e && /^\d+(\.\d+){1,3}$/.test(e.v) && Number.isInteger(e.n) && e.n > 0 && !!e.f &&
-  Object.keys(e.f).sort().join() === FILES.join() && FILES.every((k) => /^[0-9a-f]{64}$/.test(e.f[k]));
-const signedEngine = (e) => shape(e) && up.verify(Buffer.from(JSON.stringify(['53on-engine', e.v, e.n, FILES.map((k) => [k, e.f[k]])])), e.sig);
-const intact = (e, d) => { try { return !!d && FILES.every((k) => sha(fs.readFileSync(path.join(d, k))) === e.f[k]); } catch (_) { return false; } };
+  !!e.f['memory.core.js'] && !!e.f['memory.node.js'] && names(e).every((k) => NAME.test(k) && /^[0-9a-f]{64}$/.test(e.f[k]));
+const signedEngine = (e) => shape(e) && up.verify(Buffer.from(JSON.stringify(['53on-engine', e.v, e.n, names(e).map((k) => [k, e.f[k]])])), e.sig);
+const intact = (e, d) => { try { return !!d && names(e).every((k) => sha(fs.readFileSync(path.join(d, k))) === e.f[k]); } catch (_) { return false; } };
 
 let seen = null, heard = null;   // seen: the last engine script the view loaded and we used {base, v}; heard: its base, used or not
 const busy = {};   // id -> the refresh in flight
@@ -53,8 +53,7 @@ async function run(id, base, viewV) {
   if (live && !(up.newer(e.v, ptr.v) || (e.v === ptr.v && e.n > ptr.n))) { log('older engine refused: ' + e.v + '-' + e.n + ' < ' + ptr.v + '-' + ptr.n); return { ok: true, same: true }; }
   const dir = path.join(home, 'engine', e.v + '-' + e.n), part = dir + '.part';
   fs.rmSync(part, { recursive: true, force: true });
-  fs.mkdirSync(path.join(part, 'lang'), { recursive: true });
-  for (const k of FILES) fs.writeFileSync(path.join(part, k), await file(base, e, k));
+  for (const k of names(e)) { fs.mkdirSync(path.dirname(path.join(part, k)), { recursive: true }); fs.writeFileSync(path.join(part, k), await file(base, e, k)); }
   fs.writeFileSync(path.join(part, 'engine.json'), JSON.stringify(e));
   if (await packs.child(sp, ['--selftest', part]) !== 0) { fs.rmSync(part, { recursive: true, force: true }); throw new Error('engine_selftest'); }   // why: <id>.log
   await retry(() => { fs.rmSync(dir, { recursive: true, force: true }); fs.renameSync(part, dir); });
