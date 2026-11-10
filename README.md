@@ -2,7 +2,7 @@
 
 The open desktop shell of [53ON](https://53on.com): an Electron app that gives your AI hands, eyes and voice on your own PC. You stay the only guardian.
 
-This repository is the shell, and only the shell. What fills it stays private and is not here: the PC commands, the Harness Cable and the other complements are downloaded separately, each one signed (ed25519) and verified before it is installed. The memory engine and the store run as a service on 53on.com.
+This repository is the shell, and only the shell. What fills it stays private and is not here: the PC commands, the Harness Cable and the other complements are downloaded separately, each one signed (ed25519) and verified before it is installed. Your memories are files on your own PC: the memory engine is signed code that 53on.com serves and that runs inside the app. The store is 53on.com itself.
 
 ## Two ways to use it
 
