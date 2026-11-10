@@ -9,9 +9,9 @@ This repository is the shell, and only the shell. What fills it stays private an
 It is one AI with one memory, whether it works inside 53ON or outside it.
 
 - **On its own, with an API.** The AI runs in 53ON's own chat. Bring your key from Anthropic, OpenAI, Google, DeepSeek, Groq, Moonshot, Alibaba or OpenRouter, or use a model that runs on your own PC.
-- **Together with Claude Code in VS Code or the terminal.** Once you add the Harness Cable, it connects Claude Code with nothing to set up: a memory comes with each message, and the AI wakes up with its memory when a session starts or comes back from an automatic compact. Any other AI with a terminal can use the same commands.
+- **Together with Claude Code in VS Code or the terminal.** The Harness Cable installs itself and connects Claude Code with nothing to set up: a memory comes with each message, and the AI wakes up with its memory when a session starts or comes back from an automatic compact. Any other AI with a terminal can use the same commands.
 
-**For maximum use, add the complements.** The installer brings only the shell. Inside 53ON, open **≡ > Complements > Add more…** and install:
+**For maximum use you need the complements, and they come by themselves.** The installer brings only the shell. The first time 53ON starts, it downloads the Body, which brings the Harness Cable and Ear with it. If one is missing, add it from **≡ > Complements > Add more…**
 
 - **Harness Cable:** connects Claude Code to the memory and gives the AI its memory commands. The second way above needs it.
 - **Body:** the AI's hands, eyes and voice, its own browser and the PC commands.
@@ -46,7 +46,7 @@ Windows 10 and 11, 64-bit. The installer is built by this repository's [GitHub A
 
 ## Build from source
 
-Requires Node.js and Windows.
+Only needed if you want to build it yourself: the installer doesn't need Node.js. Building requires Node.js and Windows.
 
 ```
 npm ci
