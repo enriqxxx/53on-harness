@@ -12,6 +12,20 @@ The open desktop shell of [53ON](https://53on.com): an Electron app that gives y
 
 This repository is the shell, and only the shell. What fills it stays private and is not here: the PC commands, the Harness Cable and the other complements are downloaded separately, each one signed (ed25519) and verified before it is installed. Your memories are files on your own PC: the memory engine is signed code that 53on.com serves and that runs inside the app. The store is 53on.com itself.
 
+## A whole business behind your AI
+
+53ON is one app instead of five, and the harness puts its AI to work on your PC. At [53on.com](https://53on.com) the same AI, with the same memory, runs your business:
+
+- **Your WhatsApp, answered by your AI.** Connect your number in minutes, with one button.
+- **Calendar and bookings** for your services and appointments.
+- **Your store:** products, cart and checkout. Payments go straight to you, through Stripe or PayPal.
+- **A sales dashboard** to see what sells.
+- **Your own page and domain,** built with a drag-and-drop designer.
+- **Chat, voice notes and calls** with your clients, and a map that brings you the ones nearby.
+- **AI on your terms:** a model on your own PC, or your key from the big providers.
+
+[See the plans at 53on.com](https://53on.com)
+
 ## Two ways to use it
 
 It is one AI with one memory, whether it works inside 53ON or outside it.
