@@ -1,5 +1,11 @@
 # 53ON Harness
 
+**Your AI, with a memory that stays and hands, eyes and voice on your own PC. Works with Claude Code.**
+
+[![Download for Windows](https://img.shields.io/badge/Download-Windows%2010%20%2F%2011-0078D6?style=for-the-badge)](https://github.com/enriqxxx/53on-harness/releases/latest) [![53on.com](https://img.shields.io/badge/53on.com-store-7C5CFF?style=for-the-badge)](https://53on.com)
+
+[![Release](https://img.shields.io/github/v/release/enriqxxx/53on-harness)](https://github.com/enriqxxx/53on-harness/releases/latest) [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 The open desktop shell of [53ON](https://53on.com): an Electron app that gives your AI hands, eyes and voice on your own PC. You stay the only guardian.
 
 ![53ON Harness: the home, the chat with its model and live metrics, the AI load with its complements, and the chat menu with its effort and Ultracode](assets/screenshots.png)
