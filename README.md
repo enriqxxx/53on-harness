@@ -4,7 +4,7 @@
 
 [![Download for Windows](https://img.shields.io/badge/Download-Windows%2010%20%2F%2011-0078D6?style=for-the-badge)](https://github.com/enriqxxx/53on-harness/releases/latest) [![53on.com](https://img.shields.io/badge/53on.com-store-7C5CFF?style=for-the-badge)](https://53on.com)
 
-[![Release](https://img.shields.io/github/v/release/enriqxxx/53on-harness)](https://github.com/enriqxxx/53on-harness/releases/latest) [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/enriqxxx/53on-harness)](https://github.com/enriqxxx/53on-harness/releases/latest) [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![Installer: signed](https://img.shields.io/badge/installer-signed-2ea44f)](#code-signing-policy)
 
 The open desktop shell of [53ON](https://53on.com): an Electron app that gives your AI hands, eyes and voice on your own PC. You stay the only guardian.
 
@@ -64,7 +64,10 @@ One button decides how much the AI may do, and nothing else can change it: neith
 
 ## Download
 
-Windows 10 and 11, 64-bit. The installer is built by this repository's [GitHub Actions](.github/workflows/build.yml) and published in [Releases](https://github.com/enriqxxx/53on-harness/releases) and in the store of [53on.com](https://53on.com). Installed builds update themselves from a signed catalog row: an update whose signature or hash does not match is refused.
+Windows 10 and 11, 64-bit. Get the installer from [Releases](https://github.com/enriqxxx/53on-harness/releases/latest) or the store of [53on.com](https://53on.com).
+
+- **Signed.** The installer and the app carry an Authenticode signature with a timestamp, so Windows can verify who published them and that nothing changed on the way.
+- **Updates itself, safely.** Installed builds update from a signed catalog row: an update whose signature or hash does not match is refused.
 
 ## Build from source
 
@@ -78,17 +81,13 @@ npm run dist       # dist/53on-setup.exe
 
 ## Code signing policy
 
-Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org)
+Every release is built from the code in this repository, signed with a timestamp, and approved by hand before it is published.
 
 Team roles:
 
 - Authors: [enriqxxx](https://github.com/enriqxxx)
 - Reviewers: [enriqxxx](https://github.com/enriqxxx)
 - Approvers: [enriqxxx](https://github.com/enriqxxx)
-
-Status: the application to SignPath Foundation has been submitted and is waiting for approval, so the installers published so far are not signed yet.
-
-Only binaries built by this repository's workflow are submitted for signing, and each release is approved by hand.
 
 ## Privacy
 

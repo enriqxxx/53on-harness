@@ -1,4 +1,4 @@
-53on 1.0.95 · THIRD-PARTY NOTICES
+53on 1.0.96 · THIRD-PARTY NOTICES
 
 It includes the components below, each under its own license; their texts follow.
 

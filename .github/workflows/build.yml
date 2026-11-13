@@ -19,8 +19,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run dist
-      - name: Upload the unsigned installer
-        id: unsigned
+      - name: Upload the installer
+        id: installer
         uses: actions/upload-artifact@v7
         with:
           path: dist/53on-setup.exe
@@ -35,7 +35,7 @@ jobs:
           organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
           project-slug: 53on-harness
           signing-policy-slug: release-signing
-          github-artifact-id: ${{ steps.unsigned.outputs.artifact-id }}
+          github-artifact-id: ${{ steps.installer.outputs.artifact-id }}
           skip-decompress: true
           wait-for-completion: true
           output-artifact-directory: signed
